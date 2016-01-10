@@ -1,0 +1,24 @@
+# Find half of the system memory then convert it to mb
+memtouse=$(( $(sysctl hw.memsize | awk '{ print $2 }') / 2 / 1024 / 1024 ))
+
+function configure-docker-machine(){
+  running "Stop the default VM Docker sets up for you because it is simply too small."
+  docker-machine kill default;success
+
+  running "Create a new docker VM for your apps to run in."
+  docker-machine create --virtualbox-cpu-count "-1" \
+                        --virtualbox-disk-size "51200" \
+                        --virtualbox-memory "${memtouse}" \
+                        --driver "virtualbox" \
+                        dev
+  success
+
+  running "Enable access to the dev VM from your normal terminal"
+  echo 'eval "$(docker-machine env dev)"' >> ~/.profile.private
+  source ~/.profile;success
+
+  running "Update your hosts file with IP address of your Docker VM as dev.local"
+  echo "$(docker-machine ip dev) dev.local" | sudo tee -a /etc/hosts;success
+
+  inform "Don't forget to log into Docker before trying to pull images from private repos!!!!"
+}

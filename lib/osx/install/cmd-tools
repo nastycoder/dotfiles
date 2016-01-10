@@ -1,0 +1,27 @@
+echo "loaded"
+function install-cmd-tools(){
+  inform "installing homebrew command-line tools"
+
+  # Install GNU core utilities (those that come with OS X are outdated)
+  # Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`.
+  _brew coreutils
+  echo "PATH=$PATH:$(brew --prefix coreutils)/libexec/gnubin" >> $HOME/.dotfiles/.paths
+  # Install some other useful utilities like `sponge`
+  _brew moreutils
+  # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed
+  _brew findutils
+
+  _brew dos2unix
+  _brew gawk
+  _brew git-flow
+  # Install GNU `sed`, overwriting the built-in `sed`
+  # so we can do "sed -i 's/foo/bar/' file" instead of "sed -i '' 's/foo/bar/' file"
+  _brew gnu-sed --default-names
+  # jq is a JSON grep
+  _brew jq
+  _brew nmap
+  _brew tree
+  # better, more recent vim
+  _brew vim --override-system-vi
+  _brew watch
+}

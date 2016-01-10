@@ -1,0 +1,17 @@
+function configure-ssd-tweaks() {
+  running "Disable local Time Machine snapshots"
+  sudo tmutil disablelocal;success
+
+  running "Disable hibernation (speeds up entering sleep mode)"
+  sudo pmset -a hibernatemode 0;success
+
+  running "Remove the sleep image file to save disk space"
+  sudo rm -rf /Private/var/vm/sleepimage;success
+  running "Create a zero-byte file instead"
+  sudo touch /Private/var/vm/sleepimage;success
+  running "…and make sure it can’t be rewritten"
+  sudo chflags uchg /Private/var/vm/sleepimage;success
+
+  running "Disable the sudden motion sensor as it’s not useful for SSDs"
+  sudo pmset -a sms 0;success
+}

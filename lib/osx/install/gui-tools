@@ -1,0 +1,34 @@
+function install-gui-tools(){
+  inform "installing GUI tools via homebrew casks..."
+  brew tap caskroom/versions > /dev/null 2>&1
+
+  # tools
+  _cask atom
+  _cask dockertoolbox
+  _cask github-desktop
+  _cask iterm2
+  _cask macvim
+  _cask sizeup
+  _cask transmission
+
+  # app plugins
+  _apm atom-beautify
+  _apm angularjs
+  _apm atom-typescript
+  _apm ex-mode
+  _apm language-docker
+  _apm language-nginx
+  _apm linter
+  _apm linter-docker
+  _apm relative-numbers
+  _apm vim-mode
+
+
+  # browsers
+  _cask firefox
+  _cask google-chrome
+
+  # essential for life
+  _cask spotify
+  _cask spotify-notifications
+}

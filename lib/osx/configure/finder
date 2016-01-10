@@ -1,0 +1,78 @@
+function configure-finder(){
+  running "Allow quitting via ⌘ + Q; doing so will also hide desktop icons"
+  defaults write com.apple.finder QuitMenuItem -bool true;success
+
+  running "Disable window animations and Get Info animations"
+  defaults write com.apple.finder DisableAllAnimations -bool true;success
+
+  running "Set Desktop as the default location for new Finder windows"
+  # For other paths, use `PfLo` and `file:///full/path/here/`
+  defaults write com.apple.finder NewWindowTarget -string "PfDe"
+  defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/";success
+
+  running "Show hidden files by default"
+  defaults write com.apple.finder AppleShowAllFiles -bool true;success
+
+  running "Show all filename extensions"
+  defaults write NSGlobalDomain AppleShowAllExtensions -bool true;success
+
+  running "Show status bar"
+  defaults write com.apple.finder ShowStatusBar -bool true;success
+
+  running "Show path bar"
+  defaults write com.apple.finder ShowPathbar -bool true;success
+
+  running "Allow text selection in Quick Look"
+  defaults write com.apple.finder QLEnableTextSelection -bool true;success
+
+  running "Display full POSIX path as Finder window title"
+  defaults write com.apple.finder _FXShowPosixPathInTitle -bool true;success
+
+  running "When performing a search, search the current folder by default"
+  defaults write com.apple.finder FXDefaultSearchScope -string "SCcf";success
+
+  running "Disable the warning when changing a file extension"
+  defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false;success
+
+  running "Enable spring loading for directories"
+  defaults write NSGlobalDomain com.apple.springing.enabled -bool true;success
+
+  running "Remove the spring loading delay for directories"
+  defaults write NSGlobalDomain com.apple.springing.delay -float 0;success
+
+  running "Avoid creating .DS_Store files on network volumes"
+  defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true;success
+
+  running "Disable disk image verification"
+  defaults write com.apple.frameworks.diskimages skip-verify -bool true
+  defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
+  defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true;success
+
+  running "Automatically open a new Finder window when a volume is mounted"
+  defaults write com.apple.frameworks.diskimages auto-open-ro-root -bool true
+  defaults write com.apple.frameworks.diskimages auto-open-rw-root -bool true
+  defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true;success
+
+  running "Use list view in all Finder windows by default"
+  # Four-letter codes for the other view modes: `icnv`, `clmv`, `Flwv`
+  defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv";success
+
+  running "Disable the warning before emptying the Trash"
+  defaults write com.apple.finder WarnOnEmptyTrash -bool false;success
+
+  running "Empty Trash securely by default"
+  defaults write com.apple.finder EmptyTrashSecurely -bool true;success
+
+  running "Enable AirDrop over Ethernet and on unsupported Macs running Lion"
+  defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true;success
+
+  running "Show the ~/Library folder"
+  chflags nohidden ~/Library;success
+
+
+  running "Expand the following File Info panes: “General”, “Open with”, and “Sharing & Permissions”"
+  defaults write com.apple.finder FXInfoPanesExpanded -dict \
+    General -bool true \
+    OpenWith -bool true \
+    Privileges -bool true;success
+}

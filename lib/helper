@@ -1,0 +1,83 @@
+###
+# Collection of functions to help move things along.
+###
+
+# Colors
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;01m"
+COL_GREEN=$ESC_SEQ"32;01m"
+COL_YELLOW=$ESC_SEQ"33;01m"
+COL_BLUE=$ESC_SEQ"34;01m"
+COL_MAGENTA=$ESC_SEQ"35;01m"
+COL_CYAN=$ESC_SEQ"36;01m"
+
+function success() {
+  echo -e "$COL_GREEN[sucess]$COL_RESET "$1
+}
+function warn() {
+  echo -e "$COL_YELLOW[warning]$COL_RESET "$1
+}
+function failure() {
+  echo -e "$COL_RED[failed]$COL_RESET "$1
+}
+
+function inform() {
+  echo -e $1
+}
+
+function running() {
+  echo -en "$COL_YELLOW ⇒ $COL_RESET"$1": "
+}
+
+
+function _cask() {
+  running "brew cask $1"
+  brew cask list $1 > /dev/null 2>&1 | true
+  if [[ ${PIPESTATUS[0]} != 0 ]]; then
+    running "brew cask install $1 $2"
+    brew cask install --appdir="/Applications" $1
+    if [[ $? != 0 ]]; then
+      failure "failed to install $1! aborting..."
+      # exit -1
+    fi
+  fi
+  success
+}
+
+function _brew() {
+  inform "installing $1 via brew"
+  brew list $1 > /dev/null 2>&1 | true
+  if [[ ${PIPESTATUS[0]} != 0 ]]; then
+    running "brew install $1 $2"
+    brew install $1 $2
+    if [[ $? != 0 ]]; then
+      failure "failed to install $1!"
+      return
+    fi
+  fi
+  success
+}
+
+function _apm() {
+  running "checking atom plugin: $1"
+  apm list --installed --bare | grep $1@ > /dev/null
+  if [[ $? != 0 ]]; then
+    running "apm install $1"
+    apm install $1
+  fi
+  success
+}
+
+function symlink {
+  running "$1"
+  # If the file exists and we don't already have a backup, create a backup.
+  if [[ -e $1 ]]; then
+    if [[ ! -e ~/.dotfiles_backup/$1 ]];then
+      mv $1 ~/.dotfiles_backup/
+      echo -en 'backup saved...';
+    fi
+  fi
+  # Create the symlink
+  ln -s ~/.dotfiles/$1 ~/$1
+}

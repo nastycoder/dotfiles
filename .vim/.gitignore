@@ -1,0 +1,6 @@
+bundle/*
+!bundle/vundle
+colors/*
+!colors/vividchalk.vim
+spell
+.vim

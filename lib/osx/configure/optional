@@ -1,0 +1,27 @@
+read -r -d "" changewallpaperscript << ENDSCRIPT
+tell application "System Events"
+  set desktopCount to count of desktops
+  repeat with desktopNumber from 1 to desktopCount
+    tell desktop desktopNumber
+      set picture to "$HOME/.dotfiles/img/wallpaper.jpg"
+    end tell
+  end repeat
+end tell
+ENDSCRIPT
+
+function configure-optional(){
+  read -r -p "Would you like to rename this machine? [y|N] " response
+
+  if [[ $response =~ ^(y|yes|Y) ]];then
+    read -r -p "What would you like the new name to be? " machinename
+    sudo scutil --set ComputerName $machinename
+    sudo scutil --set HostName $machinename
+    sudo scutil --set LocalHostName $machinename
+    sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string $machinename
+  fi
+
+
+
+  running "Set a custom wallpaper image"
+  osascript -e $changewallpaperscript
+}

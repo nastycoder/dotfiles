@@ -1,0 +1,16 @@
+function configure-screen(){
+  running "Save screenshots to the desktop"
+  defaults write com.apple.screencapture location -string "${HOME}/Desktop";success
+
+  running "Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)"
+  defaults write com.apple.screencapture type -string "png";success
+
+  running "Disable shadow in screenshots"
+  defaults write com.apple.screencapture disable-shadow -bool true;success
+
+  running "Enable subpixel font rendering on non-Apple LCDs"
+  defaults write NSGlobalDomain AppleFontSmoothing -int 2;success
+
+  running "Enable HiDPI display modes (requires restart)"
+  sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true;success
+}

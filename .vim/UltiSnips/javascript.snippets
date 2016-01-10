@@ -1,0 +1,32 @@
+snippet for
+for(var $1 = 0; $1 < $2; $1++){
+  $0
+}
+endsnippet
+
+
+# Angular Snippets
+snippet ngd "A directive"
+.directive('${1:directiveName}',[function(){
+  return{
+    restrict: '${2:E}',
+    templateUrl: '${3:path/to/template}',
+    controller: ['$scope', function($scope){
+      $0
+    }],
+    link: function(scope, element, attrs, ctrl){},
+  };
+}]);
+endsnippet
+
+snippet ngtr
+{{ ${1} | translate }}
+endsnippet
+
+snippet cd
+console.debug(${1});
+endsnippet
+
+snippet cl
+console.log(${1});
+endsnippet

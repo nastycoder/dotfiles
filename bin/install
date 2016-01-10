@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+###########################
+# This script installs the dotfiles and run the setup script
+###########################
+
+DEFAULT_EMAIL="adams.uriah@gmail.com"
+DEFAULT_GITHUBUSER="nastycoder"
+DEFAULT_NAME="Uriah Adams"
+
+
+# include the helper script
+source $HOME/.dotfiles/lib/helper
+source $HOME/.dotfiles/lib/osx/setup
+
+
+# Create a place for backup dotfiles
+if [[ ! -e ~/.dotfiles_backup ]]; then
+    mkdir ~/.dotfiles_backup
+fi
+
+inform "Before installation can begin. You will have to provide some information.\nThis information will allow proper setup of your environment."
+
+# First try to pull name from OS
+fullname=`osascript -e "long user name of (system info)"`
+
+# If we got something lets ensure its correct
+if [[ -n "$fullname" ]];then
+  lastname=$(echo $fullname | awk '{print $2}');
+  firstname=$(echo $fullname | awk '{print $1}');
+
+  inform "I see that your full name is $COL_YELLOW$firstname $lastname$COL_RESET"
+  read -r -p "Is this correct? [Y|n] " response
+# else it must be wrong
+else
+  response='n'
+fi
+
+# If the response was wrong, let just ask for it.
+if [[ $response =~ ^(no|n|N) ]];then
+  read -r -p "What is your first name? " firstname
+  read -r -p "What is your last name? " lastname
+fi
+
+fullname="$firstname $lastname"
+
+read -r -p "What is your email? [$DEFAULT_EMAIL] " email
+
+if [ -z "$email"]; then
+  email=$DEFAULT_EMAIL
+fi
+
+read -r -p "What is your github.com username? [$DEFAULT_GITHUBUSER] " githubuser
+
+if [ -z "$githubuser" ]; then
+  githubuser=$DEFAULT_GITHUBUSER
+fi
+
+running "Updating placeholder data in .gitconfig with your info ($COL_YELLOW$fullname, $email, $githubuser$COL_RESET)"
+
+# test if gnu-sed or osx sed
+dotgitconfig=$HOME/.dotfiles/.gitconfig
+sed -i '' 's/'$DEFAULT_NAME'/'$firstname' '$lastname'/' $dotgitconfig;
+sed -i '' 's/'$DEFAULT_EMAIL'/'$email'/' $dotgitconfig;
+sed -i '' 's/'$DEFAULT_GITHUBUSER'/'$githubuser'/' $dotgitconfig;
+
+pushd ~ > /dev/null 2>&1
+
+inform "creating symlinks for project dotfiles..."
+
+dotfiles=(.aliases .fn .gitconfig .gitignore .paths .profile .vars .vim .vimrc .vimrc.bundles .zlogout .zprofile .zshrc)
+for f in $dotfiles; do symlink $f; done
+privatedotfiles=(.aliases.private .fn.private .paths.private .profile.private .vars.private)
+for f in $privatedotfiles; do touch $HOME/$f; done
+
+popd > /dev/null 2>&1
+
+osstring="$(uname -a)"
+
+if [[ $osstring =~ ^Darwin ]]; then
+  setup-osx
+fi
+
+inform "DONE!!"

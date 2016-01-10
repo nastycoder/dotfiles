@@ -1,0 +1,68 @@
+function setup-osx(){
+  # We are going to need the administrator password for this part, so lets just get that out of the way.
+
+  inform "checking sudo state..."
+  if sudo grep -q "# %wheel\tALL=(ALL) NOPASSWD: ALL" "/etc/sudoers"; then
+    # Keep-alive: update existing sudo time stamp until the script has finished
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+  fi
+  success
+
+  #####
+  # install homebrew
+  #####
+
+  running "checking for homebrew installation"
+  $(hash brew) 2>&1 > /dev/null
+  if [[ $? != 0 ]]; then
+    inform "installing homebrew"
+      ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+      if [[ $? != 0 ]]; then
+        failure "unable to install homebrew, bailing out!"
+        exit -1
+    fi
+  fi
+  success
+
+  # Make sure we’re using the latest Homebrew
+  inform "updating homebrew"
+  brew update
+  success
+
+  inform "before installing brew packages, we can upgrade any outdated packages."
+  read -r -p "run brew upgrade? [y|N] " response
+  if [[ $response =~ ^(y|yes|Y) ]];then
+    # Upgrade any already-installed formulae
+    running "brew upgrade"
+    brew upgrade
+    success "brews updated..."
+  fi
+
+	inform "brew cask askes for a password on first run, so lets get that out of the way now."
+  running "brew cask"
+  brew cask
+
+  for f in $HOME/.dotfiles/lib/osx/install/*; do 
+    source $f
+    $"install-$(basename $f)" 
+  done
+
+  for f in $HOME/.dotfiles/lib/osx/configure/*; do
+    source $f
+    $"configure-$(basename $f)"
+  done
+  
+  # Let go ahead and switch the default shell now that we have sudo
+  TEST_CURRENT_SHELL=$(expr "$SHELL" : '.*/\(.*\)')
+  if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
+    # If this platform provides a "chsh" command (not Cygwin), do it, man!
+    if hash chsh >/dev/null 2>&1; then
+      inform "Time to change your default shell to zsh!"
+      sudo chsh -s $(grep /zsh$ /etc/shells | tail -1) $(whoami)
+    # Else, suggest the user do so manually.
+    else
+      failure "I can't change your shell automatically because this system does not have chsh."
+      failure "Please manually change your default shell to zsh!"
+    fi
+  fi
+}
