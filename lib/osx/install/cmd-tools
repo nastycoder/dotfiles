@@ -1,4 +1,3 @@
-echo "loaded"
 function install-cmd-tools(){
   inform "installing homebrew command-line tools"
 

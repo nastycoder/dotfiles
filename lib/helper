@@ -69,7 +69,17 @@ function _apm() {
   success
 }
 
-function symlink {
+function _pm() {
+  running "$pm install $1"
+  $pm install -y $1
+  success
+}
+
+function command_exists() {
+  type "$1" &> /dev/null ;
+}
+
+function symlink() {
   running "$1"
   # If the file exists and we don't already have a backup, create a backup.
   if [[ -e $1 ]]; then

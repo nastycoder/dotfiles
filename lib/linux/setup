@@ -1,0 +1,28 @@
+function setup-linux {
+  # We are going to need the administrator password for this part, so lets just get that out of the way.
+
+  inform "checking sudo state..."
+  if sudo grep -q "# %wheel\tALL=(ALL) NOPASSWD: ALL" "/etc/sudoers"; then
+    # Keep-alive: update existing sudo time stamp until the script has finished
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+  fi
+  success
+  
+  if command_exists apt-get ; then
+    export pm="apt-get"
+  else
+    info "Currently only setup for apt-get"
+    failure
+    exit 1
+  fi
+  
+  for f in $HOME/.dotfiles/lib/linux/install/*; do
+    source $f
+    $"install-$(basename $f)"
+  done
+
+  for f in $HOME/.dotfiles/lib/linux/configure/*; do
+    source $f
+    $"configure-$(basename $f)"
+  done
+}

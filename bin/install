@@ -12,6 +12,7 @@ DEFAULT_NAME="Uriah Adams"
 # include the helper script
 source $HOME/.dotfiles/lib/helper
 source $HOME/.dotfiles/lib/osx/setup
+source $HOME/.dotfiles/lib/linux/setup
 
 
 # Create a place for backup dotfiles
@@ -79,6 +80,8 @@ osstring="$(uname -a)"
 
 if [[ $osstring =~ ^Darwin ]]; then
   setup-osx
+else [[ $osstring =~ ^Linux ]]; then
+  setup-linux
 fi
 
 inform "DONE!!"

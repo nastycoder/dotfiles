@@ -1,0 +1,7 @@
+function install-cmd-tools(){
+  inform "installing command-line tools"
+
+  _pm vim
+  _pm git
+  _pm openssh-server
+}

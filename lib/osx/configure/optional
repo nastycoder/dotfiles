@@ -20,8 +20,6 @@ function configure-optional(){
     sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string $machinename
   fi
 
-
-
   running "Set a custom wallpaper image"
   osascript -e $changewallpaperscript
 }

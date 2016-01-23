@@ -1,0 +1,11 @@
+function configure-hostname {
+  read -r -p "Would you like to rename this machine? [y|N] " response
+
+  if [[ $response =~ ^(y|yes|Y) ]];then
+    read -r -p "What would you like the new name to be? " machinename
+    currentname=$(cat /etc/hostname)
+    sed -i 's/currentname/machinename/g' /etc/hostname
+    sed -i 's/currentname/machinename/g' /etc/hosts
+    success
+  fi
+}
