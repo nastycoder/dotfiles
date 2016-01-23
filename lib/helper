@@ -71,7 +71,7 @@ function _apm() {
 
 function _pm() {
   running "$pm install $1"
-  $pm install -y $1
+  sudo $pm install -y $1
   success
 }
 

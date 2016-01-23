@@ -23,7 +23,9 @@ fi
 inform "Before installation can begin. You will have to provide some information.\nThis information will allow proper setup of your environment."
 
 # First try to pull name from OS
-fullname=`osascript -e "long user name of (system info)"`
+if command_exists osascript ; then
+  fullname=`osascript -e "long user name of (system info)"`
+fi
 
 # If we got something lets ensure its correct
 if [[ -n "$fullname" ]];then
@@ -70,9 +72,9 @@ pushd ~ > /dev/null 2>&1
 inform "creating symlinks for project dotfiles..."
 
 dotfiles=(.aliases .fn .gitconfig .gitignore .paths .profile .vars .vim .vimrc .vimrc.bundles .zlogout .zprofile .zshrc)
-for f in $dotfiles; do symlink $f; done
+for f in "${dotfiles[@]}"; do symlink $f; done
 privatedotfiles=(.aliases.private .fn.private .paths.private .profile.private .vars.private)
-for f in $privatedotfiles; do touch $HOME/$f; done
+for f in "{$privatedotfiles[@]}"; do touch $HOME/$f; done
 
 popd > /dev/null 2>&1
 

@@ -20,9 +20,9 @@ alias to.devapps='cd ${MYDEVAPPS}'
 #################################
 # Simple Program Name Shortening
 alias g=git
-alias doc=docker
-alias docc=docker-compose
-
+alias dk=docker
+alias dkc=docker-compose
+alias dkm=docker-machine
 
 #############################
 # Utilities
@@ -31,7 +31,8 @@ alias docc=docker-compose
 alias gs="git status"
 alias gc="git checkout"
 alias gpl="git pull"
-alias grh="git reset --head HEAD"
+alias grh="git reset --hard HEAD"
+alias gps="git push"
 
 # tail shortcuts
 alias tlf="tail -f"

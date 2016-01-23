@@ -4,8 +4,8 @@ function configure-hostname {
   if [[ $response =~ ^(y|yes|Y) ]];then
     read -r -p "What would you like the new name to be? " machinename
     currentname=$(cat /etc/hostname)
-    sed -i 's/currentname/machinename/g' /etc/hostname
-    sed -i 's/currentname/machinename/g' /etc/hosts
+    sudo sed -i "s/${currentname}/${machinename}/g" /etc/hostname
+    sudo sed -i "s/${currentname}/${machinename}/g" /etc/hosts
     success
   fi
 }

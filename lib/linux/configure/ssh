@@ -4,8 +4,8 @@ function configure-ssh {
   sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.default
   sudo chmod a-w /etc/ssh/sshd_config.default
   running "Disabling password authentication via ssh"
-  sed -i 's/#PasswordAuthentication\ yes/PasswordAuthentication\ no/g' /etc/ssh/sshd_config
+  sudo sed -i 's/#PasswordAuthentication\ yes/PasswordAuthentication\ no/g' /etc/ssh/sshd_config
   running "Disabling root login"
-  sed -i 's/PermitRootLogin\ without-password/PermitRootLogin\ no/g' /etc/ssh/sshd_config
+  sudo sed -i 's/PermitRootLogin\ without-password/PermitRootLogin\ no/g' /etc/ssh/sshd_config
   success
 }

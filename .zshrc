@@ -2,7 +2,7 @@
 export ZSH=$HOME/.dotfiles/.oh-my-zsh
 ZSH_THEME="bira"
 source $ZSH/oh-my-zsh.sh
-plugins=(brew colorize compleat dirpersist git git-flow osx ssh-agent)
+plugins=(brew colorize compleat dirpersist git git-flow osx ssh-agent docker)
 
 # enable colored output from ls, etc
 export CLICOLOR=1
